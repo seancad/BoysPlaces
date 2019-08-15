@@ -43,13 +43,9 @@ class AddRentals extends React.Component {
     alert("sent");
 
     axios
-      .post("", {
-        params: {
-          values: this.state.values
-        }
-      })
+      .get("https://djangodb.herokuapp.com/api")
       .then(function(response) {
-        console.log(response);
+        console.log("response: ", JSON.stringify(response.data));
       })
       .catch(function(error) {
         console.log(error);
