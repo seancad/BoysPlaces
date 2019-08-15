@@ -1,12 +1,10 @@
-import React, { Fragment } from "react";
-import { Form, Button, Grid, Container, Input } from "semantic-ui-react";
+import React from "react";
+import { Form, Button, Grid, Container } from "semantic-ui-react";
 import Test from "../comps/searchselect";
 import axios from "axios";
 
-const options = [
-  { key: "Test", value: "123", text: "Test" },
-  { key: "Test1", value: "12345", text: "Test1" }
-];
+const options = ["in-suit landry", "dishwasher", "oven/stove"];
+const defaultChoices = options.slice(0, 3);
 
 class AddRentals extends React.Component {
   constructor(props) {
@@ -14,7 +12,9 @@ class AddRentals extends React.Component {
     this.state = {
       selectorValues: [],
       price: "",
-      distance: ""
+      distance: "",
+      bathrooms: "",
+      bedrooms: ""
     };
     this.handleSelector = this.handleSelector.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -39,23 +39,29 @@ class AddRentals extends React.Component {
       this.setState({ [name]: this.state[name] });
     }
   }
+
   onSubmit(e) {
     alert("sent");
 
     axios
-      .get("https://djangodb.herokuapp.com/api")
-      .then(function(response) {
-        console.log("response: ", JSON.stringify(response.data));
+      .post("https://djangodb.herokuapp.com/apirentals/", {
+        monthly_price: this.state.price
       })
+      .then(res => console.log(res))
       .catch(function(error) {
         console.log(error);
       });
   }
   render() {
+    console.log(defaultChoices);
     return (
       <Container>
         <Form onSubmit={this.onSubmit}>
-          <Test options={options} handleStuff={this.handleSelector} />
+          <Test
+            options={options}
+            defaultValue={defaultChoices}
+            handleStuff={this.handleSelector}
+          />
           <Form.Group unstackable widths={2}>
             <Form.Input
               label="Price (Monthly)"
@@ -72,6 +78,34 @@ class AddRentals extends React.Component {
               onChange={this.handleInput}
               name="distance"
               value={this.state["distance"]}
+            />
+          </Form.Group>
+          <Form.Group unstackable widths={2}>
+            <Form.Input
+              label="Bedrooms"
+              icon="bed"
+              placeholder="# Bedrooms"
+              value={this.state["bedrooms"]}
+              onChange={this.handleInput}
+              name="bedrooms"
+            />
+            <Form.Input
+              label="Bathrooms"
+              icon="bath"
+              placeholder="# Bathrooms"
+              onChange={this.handleInput}
+              name="bathrooms"
+              value={this.state["bathrooms"]}
+            />
+          </Form.Group>
+          <h4>Utilities</h4>
+          <Form.Group widths={"equal"}>
+            <Form.Checkbox label="Water" name="Water" defaultChecked />
+            <Form.Checkbox label="Heat" defaultChecked name="Heat" />
+            <Form.Checkbox
+              label="Electricity"
+              defaultChecked
+              name="Electricity"
             />
           </Form.Group>
           <Button type="submit"> Add</Button>
