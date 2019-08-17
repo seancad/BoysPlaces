@@ -6,3 +6,17 @@
   margin: 0 auto;
   width: 50%;
 }
+.features-box {
+  display: flexbox;
+  flex-wrap: wrap;
+}
+.features-item {
+  border-width: 1px;
+  border-color: rgb(61, 18, 18);
+  border-style: solid;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-left: 10px;
+  background-color: rgb(78, 165, 223);
+}
