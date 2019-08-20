@@ -16,6 +16,7 @@ class Selector extends Component {
     }
     this.setState({ options: options });
   }
+
   handleEvent(e, { value }) {
     console.log("value", value);
     this.props.handleStuff(value);

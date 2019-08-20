@@ -37,6 +37,7 @@ class AddRentals extends React.Component {
 
   componentDidUpdate() {
     console.log("parent-state:", this.state);
+    console.log(this);
   }
 
   handleSelector(value) {
@@ -76,9 +77,9 @@ class AddRentals extends React.Component {
       });
   }
   render() {
-    console.log(defaultChoices);
+    console.log("ref", this.props.refer);
     return (
-      <div>
+      <div ref={this.props.refer}>
         <Form onSubmit={this.onSubmit}>
           <Test
             options={options}

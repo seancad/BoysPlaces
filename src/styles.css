@@ -9,6 +9,7 @@
 .features-box {
   display: flexbox;
   flex-wrap: wrap;
+  word-wrap: normal;
 }
 .features-item {
   border-width: 1px;
