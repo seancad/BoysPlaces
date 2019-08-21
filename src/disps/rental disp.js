@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { Grid, Container, Table, Button } from "semantic-ui-react";
 import shave from "shave";
 
@@ -11,8 +11,16 @@ const rentalDisplay = props => {
     var text = e.target.href;
     navigator.clipboard.writeText(text);
   };
+  let refer;
+  console.log("all stuffs", refer);
+  console.log("founded");
   return (
-    <div>
+    <div
+      ref={element => {
+        refer = element;
+        console.log(refer.getBoundingClientRect());
+      }}
+    >
       <Grid celled stackable>
         <Grid.Row>
           <Grid.Column width={3}>
@@ -40,11 +48,11 @@ const rentalDisplay = props => {
                 <Table definition>
                   <Table.Body>
                     <Table.Row>
-                      <Table.Cell width={2}>Bathrooms</Table.Cell>
-                      <Table.Cell width={14}>{props.data.bathrooms}</Table.Cell>
+                      <Table.Cell singleLine>Baths</Table.Cell>
+                      <Table.Cell>{props.data.bathrooms}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
-                      <Table.Cell>Bedrooms</Table.Cell>
+                      <Table.Cell>Bed Rooms</Table.Cell>
                       <Table.Cell>{props.data.bedrooms}</Table.Cell>
                     </Table.Row>
                   </Table.Body>
@@ -77,7 +85,7 @@ const rentalDisplay = props => {
                       </Table.Cell>
                     </Table.Row>
                     <Table.Row>
-                      <Table.Cell width={2}>Placeholder</Table.Cell>
+                      <Table.Cell width={2}>Url</Table.Cell>
 
                       <Table.Cell
                         style={{ width: 100 }}

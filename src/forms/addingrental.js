@@ -22,6 +22,7 @@ class AddRentals extends React.Component {
       bathrooms: "",
       bedrooms: "",
       url: "",
+      squareft: "",
       utilities: {
         Electricity: true,
         Heat: true,
@@ -132,7 +133,7 @@ class AddRentals extends React.Component {
           />
           <Form.Input
             label="Url"
-            icon="web"
+            icon="linkify"
             placeholder="Url"
             onChange={this.handleInputString}
             name="url"

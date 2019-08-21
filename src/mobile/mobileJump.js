@@ -29,7 +29,7 @@ class MobileButton extends React.Component {
   }
   render() {
     const { width } = this.state;
-    if (width <= 500) {
+    if (width <= 767) {
       return (
         <div style={{ top: 100 }}>
           <button onClick={this.scrollToRef}>Click me</button>
