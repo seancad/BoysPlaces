@@ -12,10 +12,10 @@ class MobileButton extends React.Component {
   }
   scrollToRef() {
     const { ref } = this.state;
-    console.log(document.documentElement.scrollHeight);
+
     window.scrollTo(
       0,
-      document.documentElement.scrollHeight - (ref.current.offsetHeight + 20)
+      document.documentElement.scrollHeight - (ref.current.offsetHeight + 100)
     );
   }
   componentWillMount() {
@@ -31,7 +31,7 @@ class MobileButton extends React.Component {
     const { width } = this.state;
     if (width <= 767) {
       return (
-        <div style={{ top: 100 }}>
+        <div style={{ top: 50 }}>
           <button onClick={this.scrollToRef}>Click me</button>
         </div>
       );

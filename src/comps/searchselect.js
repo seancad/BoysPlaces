@@ -18,7 +18,6 @@ class Selector extends Component {
   }
 
   handleEvent(e, { value }) {
-    console.log("value", value);
     this.props.handleStuff(value);
   }
   render() {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Grid, Container } from "semantic-ui-react";
+import { Form, Button, Grid, Container, Loader } from "semantic-ui-react";
 import Test from "../comps/searchselect";
 import axios from "axios";
 
@@ -16,18 +16,21 @@ class AddRentals extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectorValues: [],
+      features_list: [],
       price: "",
       distance: "",
       bathrooms: "",
       bedrooms: "",
       url: "",
+      location: "",
       squareft: "",
       utilities: {
         Electricity: true,
         Heat: true,
         Water: true
-      }
+      },
+      isLoading: false,
+      error: false
     };
     this.handleSelector = this.handleSelector.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -35,15 +38,12 @@ class AddRentals extends React.Component {
     this.handleCheckBox = this.handleCheckBox.bind(this);
     this.handleInputString = this.handleInputString.bind(this);
   }
-
-  componentDidUpdate() {
-    console.log("parent-state:", this.state);
-    console.log(this);
-  }
+  isLoading = false;
+  componentDidUpdate() {}
 
   handleSelector(value) {
     this.setState({
-      selectorValues: value
+      features_list: value
     });
   }
 
@@ -65,20 +65,88 @@ class AddRentals extends React.Component {
     this.setState({ utilities: currentUtilities });
   }
 
-  onSubmit(e) {
-    alert("sent");
+  async formatForSendList(obj, changesString) {
+    for (let change of changesString) {
+      var list = obj[change];
+      obj[change] = list.join(",");
+    }
+    console.log("newobj", obj);
+  }
+  async formatForSendObj(obj, changesString) {
+    let outputString = "";
 
-    axios
+    for (let change of changesString) {
+      const store = obj[change];
+      let first = true;
+      for (const property in store) {
+        const value = store[property];
+        if (value === true) {
+          if (first) {
+            outputString += `${property}`;
+            first = false;
+          } else {
+            outputString += `,${property}`;
+          }
+        }
+      }
+      console.log(outputString);
+      obj[change] = outputString;
+    }
+  }
+  async onSubmit(e) {
+    e.preventDefault();
+    this.setState({ ...this.state, error: false, isLoading: true });
+    var data = this.state;
+    await this.formatForSendList(data, ["features_list"]);
+    await this.formatForSendObj(data, ["utilities"]);
+    var errorCatch = {};
+    await axios
       .post("https://djangodb.herokuapp.com/apirentals/", {
-        monthly_price: this.state.price
+        url: data.url,
+        price: data.price,
+        features_list: data.features_list,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        time_to_uofa: data.distance,
+        utilities: data.utilities,
+        location: data.location
       })
       .then(res => console.log(res))
       .catch(function(error) {
-        console.log(error);
+        errorCatch.error = true;
       });
+    this.setState({ ...this.state, error: errorCatch.error });
+    if (this.state.error) {
+      console.log("error");
+      this.setState({ ...this.state, isLoading: false });
+    } else {
+      this.setState({
+        features_list: [],
+        price: "",
+        distance: "",
+        bathrooms: "",
+        bedrooms: "",
+        url: "",
+        location: "",
+        squareft: "",
+        utilities: {
+          Electricity: true,
+          Heat: true,
+          Water: true
+        },
+        isLoading: false,
+        error: false
+      });
+    }
   }
   render() {
-    console.log("ref", this.props.refer);
+    let addOrLoad;
+    console.log("state:", this.state);
+    if (this.state.isLoading) {
+      return <Loader />;
+    } else {
+      addOrLoad = <Button type="submit"> Add</Button>;
+    }
     return (
       <div ref={this.props.refer}>
         <Form onSubmit={this.onSubmit}>
@@ -87,7 +155,7 @@ class AddRentals extends React.Component {
             defaultValue={defaultChoices}
             handleStuff={this.handleSelector}
           />
-          <Form.Group widths={2}>
+          <Form.Group>
             <Form.Input
               label="Price (Monthly)"
               icon="dollar sign"
@@ -95,6 +163,7 @@ class AddRentals extends React.Component {
               value={this.state["price"]}
               onChange={this.handleInput}
               name="price"
+              width={8}
             />
             <Form.Input
               label="Time to UofA(minutes)"
@@ -102,6 +171,7 @@ class AddRentals extends React.Component {
               placeholder="Time"
               onChange={this.handleInput}
               name="distance"
+              width={8}
               value={this.state["distance"]}
             />
           </Form.Group>
@@ -179,7 +249,7 @@ class AddRentals extends React.Component {
             />
           </Form.Group>
 
-          <Button type="submit"> Add</Button>
+          {addOrLoad}
         </Form>
       </div>
     );

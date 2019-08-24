@@ -3,10 +3,10 @@
     {
       "views": [
         {
-          "id": "codesandbox.tests"
+          "id": "codesandbox.browser"
         },
         {
-          "id": "codesandbox.browser"
+          "id": "codesandbox.tests"
         }
       ]
     },

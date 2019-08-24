@@ -1,15 +1,21 @@
 import Display from "./rental disp";
 import React, { Component, Fragment } from "react";
-
+import { Loader } from "semantic-ui-react";
 import axios from "axios";
+import parletong from "./parselist";
 
 class IndexDisplay extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      apiData: ""
+      isLoading: true,
+      justSubmitted: this.props.justSubmitted
     };
+
+    this.mapDisplay = this.mapDisplay.bind(this);
   }
+
   mockApiData = {
     selectorValues: [
       "dishwasher",
@@ -30,21 +36,39 @@ class IndexDisplay extends Component {
       Water: true
     }
   };
-  componentDidMount() {}
+  async componentDidMount() {
+    let data = await axios.get("https://djangodb.herokuapp.com/apirentals/");
+    let arrayData = data.data;
+    this.mutateObjLists(arrayData, ["utilities", "features_list"], null);
+    console.log("right after call", data.data);
+    const displays = await this.mapDisplay(arrayData);
+    console.log("finished mapdisplay", arrayData);
+    this.setState({ isLoading: false, apiData: arrayData, displays: displays });
+  }
+
+  async mapDisplay(data) {
+    let output;
+    output = data.map((obj, key) => <Display data={obj} key={key} />);
+
+    return output;
+  }
+
+  componentDidUpdate() {}
+
+  async mutateObjLists(objList, listOfProperties, func) {
+    for (let element of objList) {
+      for (let property of listOfProperties) {
+        const splitItems = element[property].split(",");
+        element[property] = splitItems;
+      }
+    }
+  }
   render() {
-    return (
-      <Fragment>
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-        <Display data={this.mockApiData} />
-      </Fragment>
-    );
+    if (this.state.isLoading) {
+      return <Loader active inline="centered" />;
+    } else {
+      return <Fragment> {this.state.displays} </Fragment>;
+    }
   }
 }
 

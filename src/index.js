@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, createRef } from "react";
 import ReactDOM from "react-dom";
 
 import "./styles.css";
@@ -9,29 +9,42 @@ import { Grid, Sticky, Ref } from "semantic-ui-react";
 
 var stickyRef = React.createRef();
 
-function App() {
-  var jumpRef = useRef(null);
-  return (
-    <div className="App">
-      <h1>Rental Form</h1>
-      <Sticky context={stickyRef}>
-        <MobileJump reference={jumpRef} />
-      </Sticky>
-      <Grid stackable>
-        <Ref innerRef={stickyRef}>
-          <Grid.Column width={10}>
-            <Display />
-          </Grid.Column>
-        </Ref>
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { justSubmitted: false };
+  }
 
-        <Grid.Column width={6}>
-          <Sticky offset={30} context={stickyRef}>
-            <RentalForm refer={jumpRef} />
-          </Sticky>
-        </Grid.Column>
-      </Grid>
-    </div>
-  );
+  onsubmit = function() {
+    this.setState();
+  };
+  render() {
+    var jumpRef = createRef();
+    return (
+      <div className="App">
+        <h1>Rentals</h1>
+        <Sticky context={stickyRef}>
+          <MobileJump reference={jumpRef} />
+        </Sticky>
+        <Grid stackable>
+          <Grid.Row>
+            <Ref innerRef={stickyRef}>
+              <Grid.Column width={10}>
+                <Display justSubmitted={this.state.justSubmitted} />
+              </Grid.Column>
+            </Ref>
+
+            <Grid.Column width={6}>
+              <Sticky offset={30} context={stickyRef}>
+                <h1> Rental Form</h1>
+                <RentalForm refer={jumpRef} />
+              </Sticky>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </div>
+    );
+  }
 }
 
 const rootElement = document.getElementById("root");

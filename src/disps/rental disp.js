@@ -5,6 +5,7 @@ import shave from "shave";
 // Use cheerio to scrape url for imgs.
 
 const rentalDisplay = props => {
+  console.log("start", props.data);
   var textInput = React.createRef();
 
   const handleCopy = function(e) {
@@ -12,8 +13,7 @@ const rentalDisplay = props => {
     navigator.clipboard.writeText(text);
   };
   let refer;
-  console.log("all stuffs", refer);
-  console.log("founded");
+  console.log("all stuffs", refer, props.data);
   return (
     <div
       ref={element => {
@@ -39,7 +39,7 @@ const rentalDisplay = props => {
                     <Table.Row>
                       <Table.Cell>Distance</Table.Cell>
 
-                      <Table.Cell>{props.data.distance} km</Table.Cell>
+                      <Table.Cell>{props.data.time_to_uofa} km</Table.Cell>
                     </Table.Row>
                   </Table.Body>
                 </Table>
@@ -102,7 +102,7 @@ const rentalDisplay = props => {
                   <Table.Cell width={2}>Features</Table.Cell>
                   <Table.Cell>
                     <div className="row">
-                      {props.data.selectorValues.map(item => {
+                      {props.data.features_list.map(item => {
                         return <span className="features-item">{item}</span>;
                       })}
                     </div>
@@ -115,6 +115,20 @@ const rentalDisplay = props => {
                 <Table.Row>
                   <Table.Cell width={2}>Location</Table.Cell>
                   <Table.Cell>{props.data.location}</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+            <Table definition>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell width={2}>Utilities</Table.Cell>
+                  <Table.Cell>
+                    <div className="row">
+                      {props.data.utilities.map(item => {
+                        return <span className="features-item">{item}</span>;
+                      })}
+                    </div>
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>
