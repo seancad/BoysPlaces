@@ -18,7 +18,6 @@ const rentalDisplay = props => {
     <div
       ref={element => {
         refer = element;
-        console.log(refer.getBoundingClientRect());
       }}
     >
       <Grid celled stackable>
@@ -85,7 +84,7 @@ const rentalDisplay = props => {
                       </Table.Cell>
                     </Table.Row>
                     <Table.Row>
-                      <Table.Cell width={2}>Url</Table.Cell>
+                      <Table.Cell width={2}>Location</Table.Cell>
 
                       <Table.Cell
                         style={{ width: 100 }}
@@ -110,14 +109,7 @@ const rentalDisplay = props => {
                 </Table.Row>
               </Table.Body>
             </Table>
-            <Table definition>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell width={2}>Location</Table.Cell>
-                  <Table.Cell>{props.data.location}</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+
             <Table definition>
               <Table.Body>
                 <Table.Row>

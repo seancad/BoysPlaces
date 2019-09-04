@@ -14,6 +14,7 @@ class IndexDisplay extends Component {
     };
 
     this.mapDisplay = this.mapDisplay.bind(this);
+    this.reFetch = this.reFetch.bind(this);
   }
 
   mockApiData = {
@@ -44,6 +45,7 @@ class IndexDisplay extends Component {
     const displays = await this.mapDisplay(arrayData);
     console.log("finished mapdisplay", arrayData);
     this.setState({ isLoading: false, apiData: arrayData, displays: displays });
+    setInterval(this.reFetch, 1000);
   }
 
   async mapDisplay(data) {
@@ -53,8 +55,16 @@ class IndexDisplay extends Component {
     return output;
   }
 
-  componentDidUpdate() {}
-
+  async reFetch() {
+    let data = await axios.get("https://djangodb.herokuapp.com/apirentals/");
+    let arrayData = data.data;
+    this.mutateObjLists(arrayData, ["utilities", "features_list"], null);
+    console.log("right after call", data.data);
+    const displays = await this.mapDisplay(arrayData);
+    console.log("finished mapdisplay", arrayData);
+    this.setState({ isLoading: false, apiData: arrayData, displays: displays });
+    setInterval(reFetch, 1000);
+  }
   async mutateObjLists(objList, listOfProperties, func) {
     for (let element of objList) {
       for (let property of listOfProperties) {
